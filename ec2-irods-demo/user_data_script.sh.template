@@ -2,15 +2,16 @@
 
 # get the code
 sudo apt-get -y install git
-cd /opt
-sudo git clone https://github.com/irods/contrib
+sudo git clone https://github.com/irods/contrib /opt/contrib
+cd /opt/contrib
+git checkout TEMPLATE_BRANCH_NAME
 cp -r /opt/contrib/ec2-irods-demo /opt/ec2-irods-demo
 cd /opt/ec2-irods-demo
 
 # deploy software
 sudo cp ./per-boot/* /var/lib/cloud/scripts/per-boot
 sudo cp ./per-instance/* /var/lib/cloud/scripts/per-instance
-./deploy_software.sh 4.1.7 4.1.7 4.1.7 1.7
+./deploy_software.sh TEMPLATE_IRODS_VERSION TEMPLATE_IRODS_VERSION TEMPLATE_IRODS_VERSION TEMPLATE_DB_PLUGIN_VERSION
 
 # cleanup
 sudo shred -u /root/.ssh/authorized_keys

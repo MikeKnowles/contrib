@@ -7,9 +7,9 @@ function terminate_instance() {
     fi
 }
 
-if [ $# -ne 4 ] ; then
-   echo "usage:  $0 <irods_folder> <irods_version> <db_plugin_folder> <db_plugin_version>"
-   echo "example: $0 4.1.7 4.1.7 4.1.7 1.7"
+if [ $# -lt 2 ] ; then
+   echo "usage:  $0 <irods_version> <db_plugin_version> [contrib_branch_name]"
+   echo "example: $0 4.1.7 1.7 [master]"
    exit 1
 fi
 
@@ -28,11 +28,13 @@ if [ "$JQBIN" == "" ] ; then
 fi
 
 # update user_data_script.sh
-IRODS_FOLDER=$1
-IRODS_VERSION=$2
-DB_PLUGIN_FOLDER=$3
-DB_PLUGIN_VERSION=$4
-sed -i "s|^\./deploy_software\.sh.*|\./deploy_software\.sh $IRODS_FOLDER $IRODS_VERSION $DB_PLUGIN_FOLDER $DB_PLUGIN_VERSION|g" user_data_script.sh
+IRODS_VERSION=$1
+DB_PLUGIN_VERSION=$2
+sed "s/TEMPLATE_IRODS_VERSION/$IRODS_VERSION/g" user_data_script.sh.template > user_data_script.sh
+sed -i "s/TEMPLATE_DB_PLUGIN_VERSION/$DB_PLUGIN_VERSION/g" user_data_script.sh
+BRANCH_NAME=$3
+if [ $BRANCH_NAME == "" ] ; then $BRANCH_NAME = "master" ; fi
+sed -i "s/TEMPLATE_BRANCH_NAME/$BRANCH_NAME/g" user_data_script.sh
 
 # run instance from Ubuntu_14 base image
 INSTANCE_ID=$($AWSBIN ec2 run-instances --image-id ami-bb14dad0 --security-groups "iRODS" --instance-type t2.micro --user-data file://user_data_script.sh | $JQBIN '.Instances[0].InstanceId' | sed 's/\"//g' )

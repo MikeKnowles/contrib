@@ -55,7 +55,7 @@ echo "yes" >> $RESPFILE                                        # confirm databas
 #  - creates user role with password
 #  - grants privileges
 
-sudo -u postgres createdb -O postgres '$DATABASE_NAME'
+sudo -u postgres psql -U postgres -d postgres -c "CREATE DATABASE \"$DATABASE_NAME\""
 sudo -u postgres psql -U postgres -d postgres -c "CREATE USER $DATABASE_USER WITH PASSWORD '$EC2_INSTANCE_ID'"
 sudo -u postgres psql -U postgres -d postgres -c "GRANT ALL PRIVILEGES ON DATABASE \"$DATABASE_NAME\" TO $DATABASE_USER"
 
