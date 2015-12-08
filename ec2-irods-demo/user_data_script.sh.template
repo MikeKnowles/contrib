@@ -1,5 +1,7 @@
 #!/bin/bash
 
+SCRIPTPATH=$( cd $(dirname $0) ; pwd -P )
+
 # get the code
 sudo apt-get -y install git
 sudo git clone https://github.com/irods/contrib /opt/contrib
@@ -8,10 +10,10 @@ git checkout TEMPLATE_BRANCH_NAME
 cp -r /opt/contrib/ec2-irods-demo /opt/ec2-irods-demo
 cd /opt/ec2-irods-demo
 
-# deploy software
-sudo cp ./per-boot/* /var/lib/cloud/scripts/per-boot
-sudo cp ./per-instance/* /var/lib/cloud/scripts/per-instance
-./deploy_software.sh TEMPLATE_IRODS_VERSION TEMPLATE_IRODS_VERSION TEMPLATE_IRODS_VERSION TEMPLATE_DB_PLUGIN_VERSION
+# install software
+sudo cp $SCRIPTPATH/per-boot/* /var/lib/cloud/scripts/per-boot
+sudo cp $SCRIPTPATH/per-instance/* /var/lib/cloud/scripts/per-instance
+$SCRIPTPATH/per-once/install_and_setup.sh TEMPLATE_IRODS_VERSION TEMPLATE_DB_PLUGIN_VERSION > $SCRIPTPATH/per-once/install_and_setup.sh.out
 
 # cleanup
 sudo shred -u /root/.ssh/authorized_keys

@@ -1,15 +1,12 @@
 #!/bin/bash
 
 # build.sh
-# Installs iRODS, Cloud Browser, s3 plugin, and WebDav
+# Installs iRODS, Cloud Browser, s3 plugin, and WebDAV
 
 SCRIPTPATH=$( cd $(dirname $0) ; pwd -P )
 
-IRODS_FOLDER=$1
-IRODS_VERSION=$2
-DB_PLUGIN_FOLDER=$3
-DB_PLUGIN_VERSION=$4
-
+IRODS_VERSION=$1
+DB_PLUGIN_VERSION=$2
 
 # prepare and install prerequisites
 sudo apt-get update
@@ -19,8 +16,8 @@ sudo apt-get -y install tomcat7 apache2
 sudo apt-get -y install unzip
 
 # install postgres and irods
-wget -O /tmp/irods-icat.deb ftp://ftp.renci.org/pub/irods/releases/${IRODS_FOLDER}/ubuntu14/irods-icat-${IRODS_VERSION}-ubuntu14-x86_64.deb
-wget -O /tmp/irods-postgres.deb ftp://ftp.renci.org/pub/irods/releases/${DB_PLUGIN_FOLDER}/ubuntu14/irods-database-plugin-postgres-${DB_PLUGIN_VERSION}-ubuntu14-x86_64.deb
+wget -O /tmp/irods-icat.deb ftp://ftp.renci.org/pub/irods/releases/${IRODS_VERSION}/ubuntu14/irods-icat-${IRODS_VERSION}-ubuntu14-x86_64.deb
+wget -O /tmp/irods-postgres.deb ftp://ftp.renci.org/pub/irods/releases/${IRODS_VERSION}/ubuntu14/irods-database-plugin-postgres-${DB_PLUGIN_VERSION}-ubuntu14-x86_64.deb
 sudo dpkg -i /tmp/irods-icat.deb /tmp/irods-postgres.deb
 sudo apt-get -f -y install
 
