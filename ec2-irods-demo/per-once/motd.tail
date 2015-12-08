@@ -39,3 +39,5 @@ The iRODS S3 resource plugin is also installed. To configure it:
    iadmin addchildtoresc compResc archiveResc archive
 
 Read more at https://github.com/irods/irods_resource_plugin_s3
+
+The image is rebootable (IP changes are accounted for).
