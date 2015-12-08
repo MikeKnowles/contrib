@@ -67,7 +67,7 @@ if [ $CNTR -eq 60 ] ; then
 fi
 
 # create image from this instance
-IMAGE_VERSION=0
+IMAGE_VERSION=`date -u "+%Y%m%dT%H%M%S"`
 NEW_IMAGE_NAME="irods_${IRODS_VERSION}-${IMAGE_VERSION}_demo"
 echo "Creating image [$NEW_IMAGE_NAME]"
 $AWSBIN ec2 create-image --instance-id $INSTANCE_ID --name $NEW_IMAGE_NAME --description "iRODS $IRODS_VERSION with Cloud Browser on Ubuntu 14.04"
