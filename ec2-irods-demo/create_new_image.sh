@@ -62,7 +62,7 @@ while [ $INSTANCE_STATUS != "passed" -a $ELAPSED -lt $TIMEOUT_SECONDS ] ; do
     INSTANCE_STATUS=$($AWSBIN ec2 describe-instance-status --instance-ids $INSTANCE_ID | $JQBIN '.InstanceStatuses[0].InstanceStatus.Details[0].Status' | sed 's/\"//g')
     let ELAPSED=ELAPSED+SLEEP_SECONDS
     echo $INSTANCE_STATUS
-    sleep SLEEP_SECONDS
+    sleep $SLEEP_SECONDS
 done
 echo "Instance [$INSTANCE_ID] is now running."
 
