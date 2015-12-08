@@ -9,12 +9,12 @@ DATABASE_USER="irods"
 EC2_INSTANCE_ID=$(ec2metadata --instance-id)
 
 get_random_string() {
-    # $1 is required
-    $RANDOM_STRING_LENGTH=$1
-    if [ $RANDOM_STRING_LENGTH == "" ] ; then
-        $RANDOM_STRING_LENGTH = 16
+    # $1 is used if passed in, otherwise use default
+    RANDOM_STRING_LENGTH=$1
+    if [ "$RANDOM_STRING_LENGTH" == "" ] ; then
+        RANDOM_STRING_LENGTH="16"
     fi
-    RANDOM_STRING=$(openssl rand -base64 $RANDOM_STRING_LENGTH | sed 's,/,S,g' | sed 's,+,_,g' | cut -c 1-$RANDOM_STRING_LENGTH)
+    RANDOM_STRING=`openssl rand -base64 $RANDOM_STRING_LENGTH | sed 's,/,S,g' | sed 's,+,_,g' | cut -c 1-$RANDOM_STRING_LENGTH`
 }
 
 
