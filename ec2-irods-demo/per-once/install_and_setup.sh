@@ -37,12 +37,12 @@ sudo sed -i 's/:8080//g' /var/www/irods-cloud-frontend/app/components/globals.js
 sudo cp $SCRIPTPATH/irods-cloud-backend-config.groovy /etc
 
 # configure webdav
-#WEBDAV_DOWNLOAD="https://code.renci.org/gf/download/frsrelease/241/2731/irods-webdav.war"
-#TMPFILE="/tmp/irods-webdav.war"
-#wget -O $TMPFILE $WEBDAV_DOWNLOAD
-#sudo -u tomcat7 bash -c "cp $TMPFILE /var/lib/tomcat7/webapps"
-#sudo mkdir -p /etc/irods-ext
-#sudo cp $SCRIPTPATH/irods-webdav.properties /etc/irods-ext/
+WEBDAV_DOWNLOAD="https://code.renci.org/gf/download/frsrelease/241/2732/irods-webdav.war"
+TMPFILE="/tmp/irods-webdav.war"
+wget -O $TMPFILE $WEBDAV_DOWNLOAD
+sudo -u tomcat7 bash -c "cp $TMPFILE /var/lib/tomcat7/webapps"
+sudo mkdir -p /etc/irods-ext
+sudo cp $SCRIPTPATH/irods-webdav.properties /etc/irods-ext/
 
 # restart tomcat
 sudo rm -rf /var/lib/tomcat7/webapps/ROOT
