@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # build.sh
-# Installs iRODS, Cloud Browser, s3 plugin, and WebDAV
+# Installs iRODS, Cloud Browser, S3 plugin, and WebDAV
 
 SCRIPTPATH=$( cd $(dirname $0) ; pwd -P )
 
@@ -33,19 +33,20 @@ sudo -u tomcat7 bash -c "cp $TMPFILE /var/lib/tomcat7/webapps"
 TMPFILE="/tmp/irods-cloud-frontend.zip"
 wget -O $TMPFILE $CLOUD_FRONTEND_DOWNLOAD
 sudo unzip $TMPFILE -d /var/www/
-sudo sed -i 's/:8080//g' /var/www/irods-cloud-frontend/app/components/globals.js
+sudo sed -i 's/\(location\.hostname\)/\1+":"+location.port/' /var/www/irods-cloud-frontend/app/components/globals.js
 sudo cp $SCRIPTPATH/irods-cloud-backend-config.groovy /etc
+sudo echo '<html><meta http-equiv="refresh" content="0;URL=irods-cloud-frontend"></html>' > /var/www/index.html
 
 # configure webdav
 WEBDAV_DOWNLOAD="https://code.renci.org/gf/download/frsrelease/241/2732/irods-webdav.war"
 TMPFILE="/tmp/irods-webdav.war"
 wget -O $TMPFILE $WEBDAV_DOWNLOAD
-sudo -u tomcat7 bash -c "cp $TMPFILE /var/lib/tomcat7/webapps"
+sudo -u tomcat7 bash -c "cp $TMPFILE /var/lib/tomcat7/webapps/irods-webdav.war"
 sudo mkdir -p /etc/irods-ext
 sudo cp $SCRIPTPATH/irods-webdav.properties /etc/irods-ext/
 
 # restart tomcat
-sudo rm -rf /var/lib/tomcat7/webapps/ROOT
+sudo rm -rf /var/lib/tomcat7/webapps/irods-webdav
 sudo service tomcat7 restart
 
 # configure apache
@@ -57,7 +58,7 @@ sudo a2dissite default-ssl
 sudo a2ensite ajp
 sudo service apache2 restart
 
-# install s3 plugin
+# install S3 plugin
 TMPFILE="/tmp/s3_plugin.deb"
 S3_PLUGIN_DOWNLOAD="ftp://ftp.renci.org/pub/irods/plugins/irods_resource_plugin_s3/1.2/irods-resource-plugin-s3-1.2.deb"
 sudo wget -O $TMPFILE $S3_PLUGIN_DOWNLOAD

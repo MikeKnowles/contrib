@@ -4,7 +4,7 @@ OLD_FQDN=""
 if [ -e $FQDN_LOCATION ] ; then
     OLD_FQDN=`sudo cat $FQDN_LOCATION`
 fi
-NEW_FQDN=`ec2metadata --public-hostname`
+NEW_FQDN=$(ec2metadata --public-hostname)
 
 # update hostname
 sudo hostname $NEW_FQDN

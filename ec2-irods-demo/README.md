@@ -1,9 +1,9 @@
 ec2-irods-demo
 ==============
 
-Prepares an Ubuntu 12.04 Amazon Machine Image with:
+Prepares an Ubuntu 14.04 Amazon Machine Image with:
 * a minimal iRODS installation
-* iRODS s3 resource plugin
+* iRODS S3 resource plugin
 * Cloud Browser
 * WebDav
 

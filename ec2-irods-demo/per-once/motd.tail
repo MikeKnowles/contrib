@@ -1,7 +1,7 @@
 This instance has ec2-irods-demo installed.
 
 ec2-irods-demo is a demonstration installation of iRODS, Cloud Browser,
-WebDav, and the iRODS s3 plugin on Amazon's Elastic Compute Cloud (EC2).
+WebDAV, and the iRODS S3 plugin on Amazon's Elastic Compute Cloud (EC2).
 
 The source files for ec2-irods-demo are located at
   https://github.com/irods/contrib

@@ -1,6 +1,6 @@
 #!/bin/bash
 
-# 50-instance_setup.sh
+# 50-configure.sh
 
 # variables
 RESPFILE="/opt/ec2-irods-demo/setup_responses"
