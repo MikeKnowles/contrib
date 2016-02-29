@@ -5,7 +5,7 @@ Prepares an Ubuntu 14.04 Amazon Machine Image with:
 * a minimal iRODS installation
 * iRODS S3 resource plugin
 * Cloud Browser
-* WebDav
+* WebDAV
 
 The image is rebootable (IP changes are accounted for).
 

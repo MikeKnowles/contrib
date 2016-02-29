@@ -14,7 +14,7 @@ function terminate_instance() {
 
 if [ $# -lt 2 ] ; then
    echo "usage:  $0 <irods_version> <db_plugin_version> [contrib_branch_name]"
-   echo "example: $0 4.1.7 1.7 [master]"
+   echo "example: $0 4.1.8 1.8 [master]"
    exit 1
 fi
 
