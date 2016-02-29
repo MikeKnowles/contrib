@@ -33,7 +33,7 @@ sudo -u tomcat7 bash -c "cp $TMPFILE /var/lib/tomcat7/webapps"
 TMPFILE="/tmp/irods-cloud-frontend.zip"
 wget -O $TMPFILE $CLOUD_FRONTEND_DOWNLOAD
 sudo unzip $TMPFILE -d /var/www/
-sudo sed -i 's/\(location\.hostname\)/\1+":"+location.port/' /var/www/irods-cloud-frontend/app/components/globals.js
+#sudo sed -i 's/\(location\.hostname\)/\1+":"+location.port/' /var/www/irods-cloud-frontend/app/components/globals.js
 sudo cp $SCRIPTPATH/irods-cloud-backend-config.groovy /etc
 sudo echo '<html><meta http-equiv="refresh" content="0;URL=irods-cloud-frontend"></html>' > /var/www/index.html
 
@@ -51,6 +51,7 @@ sudo service tomcat7 restart
 
 # configure apache
 sudo cp $SCRIPTPATH/ajp.conf /etc/apache2/sites-available
+sudo sed -i '/Listen 80/a Listen 8080' /etc/apache2/ports.conf
 sudo a2enmod headers
 sudo a2enmod proxy_ajp
 sudo a2dissite 000-default
