@@ -1,6 +1,7 @@
 #!/bin/bash
 
 # get the code
+apt-get update
 apt-get -y install git
 git clone https://github.com/irods/contrib /opt/contrib
 cd /opt/contrib
