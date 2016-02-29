@@ -61,7 +61,7 @@ sudo service apache2 restart
 
 # install S3 plugin
 TMPFILE="/tmp/s3_plugin.deb"
-S3_PLUGIN_DOWNLOAD="ftp://ftp.renci.org/pub/irods/plugins/irods_resource_plugin_s3/1.2/irods-resource-plugin-s3-1.2.deb"
+S3_PLUGIN_DOWNLOAD="ftp://ftp.renci.org/pub/irods/plugins/irods_resource_plugin_s3/1.3/irods-resource-plugin-s3-1.3-ubuntu14-x86_64.deb"
 sudo wget -O $TMPFILE $S3_PLUGIN_DOWNLOAD
 sudo dpkg -i $TMPFILE
 
