@@ -13,8 +13,6 @@ Listen 443
         Order deny,allow
         Allow from all
   </Proxy>
-  ServerName 172.18.0.5
-  ServerName 10.117.231.79
   RequestHeader set X-Forwarded-Proto "https"
   SSLEngine On
   SSLCipherSuite ALL:!ADH:!EXPORT56:RC4+RSA:+HIGH:+MEDIUM:+LOW:+SSLv2:+EXP:+eNULL
