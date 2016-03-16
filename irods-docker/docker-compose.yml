@@ -4,7 +4,7 @@ services:
   db:
     image: postgres:9.4
     volumes:
-      - /home/ubuntu/export/:/var/lib/postgresql/data/
+      - export:/var/lib/postgresql/data/
     environment:
       - PGDATA=/var/lib/postgresql/data/pgdata
     container_name: db
