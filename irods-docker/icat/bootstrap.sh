@@ -47,27 +47,29 @@ if [ -z "$POSTGRES_DB" ]
     export POSTGRES_DB="ICAT"
 fi
 
-# Only generate the setup_responses file if it does not exist
-if [ ! -s /export/etc/irods/setup_responses ]; then
-    # generate configuration responses
-    /opt/irods/genresp.sh /etc/irods/setup_responses
-    if [ -n "$RODS_PASSWORD" ]
-      then
-        sed -i "14s/.*/$RODS_PASSWORD/" /etc/irods/setup_responses
+if [ -n $ICAT_PLUGIN ]; then
+    # Only generate the setup_responses file if it does not exist
+    if [ ! -s /export/etc/irods/setup_responses ]; then
+        # generate configuration responses
+        /opt/irods/genresp.sh /etc/irods/setup_responses
+        if [ -n "$RODS_PASSWORD" ]
+          then
+            sed -i "14s/.*/$RODS_PASSWORD/" /etc/irods/setup_responses
+        fi
     fi
+
+    # Not sure if this is neccesary
+    #if [ -s /export/var/lib/irods/.irods/.irodsEnv ]; then
+    #    sed -i 's/^irodsHost.*/irodsHost localhost/' /var/lib/irods/.irods/.irodsEnv
+    #
+    #fi
+    # Copy & rm then link folders in export, need to add option for files
+
+    # set up PAM auth
+    source /opt/irods/pam.sh
+    # set up the iCAT database
+    /opt/irods/setupdb.sh /etc/irods/setup_responses
 fi
-
-# Not sure if this is neccesary
-#if [ -s /export/var/lib/irods/.irods/.irodsEnv ]; then
-#    sed -i 's/^irodsHost.*/irodsHost localhost/' /var/lib/irods/.irods/.irodsEnv
-#
-#fi
-# Copy & rm then link folders in export, need to add option for files
-
-# set up PAM auth
-source /opt/irods/pam.sh
-# set up the iCAT database
-/opt/irods/setupdb.sh /etc/irods/setup_responses
 # Create the previous variables for IRODS_SERVICE_ACCOUNT_NAME
 if [ -e /etc/irods/service_account.config ]; then
     source /etc/irods/service_account.config
@@ -79,6 +81,9 @@ if [ -e /etc/irods/service_account.config ]; then
     # For some reason, the native auth scheme is set by default for the server
 #    sed -e 's/native/PAM/' -i /var/lib/irods/iRODS/scripts/perl/irods_setup.pl
     tail -n +3 /etc/irods/setup_responses | /var/lib/irods/packaging/setup_irods.sh
+elif [ -z $ICAT_PLUGIN ]; then
+    sed -n -e 1,2p -e 4,+9p -e '13a\icat' /etc/irods/setup_responses && \
+    sed -n -e 3p -e 14p /etc/irods/setup_responses | /var/lib/irods/packaging/setup_irods.sh
 else
     # set up iRODS
     /opt/irods/config.sh /etc/irods/setup_responses
