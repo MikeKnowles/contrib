@@ -47,7 +47,7 @@ if [ -z "$POSTGRES_DB" ]
     export POSTGRES_DB="ICAT"
 fi
 
-if [ -n $ICAT_PLUGIN ]; then
+if [ ! -z ${ICAT_PLUGIN+x} ]; then
     # Only generate the setup_responses file if it does not exist
     if [ ! -s /export/etc/irods/setup_responses ]; then
         # generate configuration responses
@@ -80,13 +80,27 @@ if [ -e /etc/irods/service_account.config ]; then
     sudo su - ${IRODS_SERVICE_ACCOUNT_NAME} -c "touch /tmp/${IRODS_SERVICE_ACCOUNT_NAME}/setup_irods_configuration.flag"
     # For some reason, the native auth scheme is set by default for the server
 #    sed -e 's/native/PAM/' -i /var/lib/irods/iRODS/scripts/perl/irods_setup.pl
-    tail -n +3 /etc/irods/setup_responses | /var/lib/irods/packaging/setup_irods.sh
-elif [ -z $ICAT_PLUGIN ]; then
-    sed -n -e 1,2p -e 4,+9p -e '13a\icat' /etc/irods/setup_responses && \
-    sed -n -e 3p -e 14p /etc/irods/setup_responses | /var/lib/irods/packaging/setup_irods.sh
+    if [ -z ${ICAT_PLUGIN+x} ]; then
+        while [ `wc -l /export/etc/irods/setup_responses | awk '{print $1}'` -lt "21" ]; do
+            sleep 5
+        done
+        sed -n -e 4,+9p -e '13a\icat' /export/etc/irods/setup_responses && \
+        sed -n -e 3p -e 14p /export/etc/irods/setup_responses | /var/lib/irods/packaging/setup_irods.sh
+    else
+        tail -n +3 /etc/irods/setup_responses | /var/lib/irods/packaging/setup_irods.sh
+    fi
 else
+    if [ -z ${ICAT_PLUGIN+x} ]; then
+        while [ `wc -l /export/etc/irods/setup_responses | awk '{print $1}'` -lt "21" ]; do
+            sleep 5
+        done
+        sed -n -e 1,2p -e 4,+9p -e '13a\icat' /export/etc/irods/setup_responses && \
+        sed -n -e 3p -e 14p /export/etc/irods/setup_responses | /var/lib/irods/packaging/setup_irods.sh
+    else
+        /opt/irods/config.sh /etc/irods/setup_responses
+    fi
     # set up iRODS
-    /opt/irods/config.sh /etc/irods/setup_responses
+
 fi
 sed 's@\("irods_host"\)@"irods_authentication_scheme": "PAM",\
     "irods_ssl_ca_certificate_file": "/etc/irods/chain.pem",\
