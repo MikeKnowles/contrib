@@ -77,6 +77,7 @@ if [ -e /etc/irods/service_account.config ]; then
     sudo su - ${IRODS_SERVICE_ACCOUNT_NAME} -c "touch /var/lib/${IRODS_SERVICE_ACCOUNT_NAME}/packaging/binary_installation.flag"
     sudo su - ${IRODS_SERVICE_ACCOUNT_NAME} -c "mkdir -p /tmp/${IRODS_SERVICE_ACCOUNT_NAME}/"
     sudo su - ${IRODS_SERVICE_ACCOUNT_NAME} -c "touch /tmp/${IRODS_SERVICE_ACCOUNT_NAME}/setup_irods_database.flag"
+    sudo su - ${IRODS_SERVICE_ACCOUNT_NAME} -c "touch /tmp/${IRODS_SERVICE_ACCOUNT_NAME}/setup_irods_resource.flag"
     sudo su - ${IRODS_SERVICE_ACCOUNT_NAME} -c "touch /tmp/${IRODS_SERVICE_ACCOUNT_NAME}/setup_irods_configuration.flag"
     # For some reason, the native auth scheme is set by default for the server
 #    sed -e 's/native/PAM/' -i /var/lib/irods/iRODS/scripts/perl/irods_setup.pl
@@ -84,8 +85,8 @@ if [ -e /etc/irods/service_account.config ]; then
         while [ `wc -l /export/etc/irods/setup_responses | awk '{print $1}'` -lt "21" ]; do
             sleep 5
         done
-        sed -n -e 4,+9p -e '13a\icat' /export/etc/irods/setup_responses && \
-        sed -n -e 3p -e 14p /export/etc/irods/setup_responses | /var/lib/irods/packaging/setup_irods.sh
+        arr=( $(sed -n -e 4,+9p -e 15p -e '16a\icat' /export/etc/irods/setup_responses && \
+         sed -n -e 3p -e '4a\yes' -e 14p -e 21p /export/etc/irods/setup_responses) )
     else
         tail -n +3 /etc/irods/setup_responses | /var/lib/irods/packaging/setup_irods.sh
     fi
@@ -94,13 +95,18 @@ else
         while [ `wc -l /export/etc/irods/setup_responses | awk '{print $1}'` -lt "21" ]; do
             sleep 5
         done
-        sed -n -e 1,2p -e 4,+9p -e '13a\icat' /export/etc/irods/setup_responses && \
-        sed -n -e 3p -e 14p /export/etc/irods/setup_responses | /var/lib/irods/packaging/setup_irods.sh
+        arr=( $(sed -n -e 1,2p -e 4,+9p -e 15p -e '16a\icat' /export/etc/irods/setup_responses && \
+         sed -n -e 3p -e '4a\yes' -e 14p -e 21p /export/etc/irods/setup_responses) )
     else
         /opt/irods/config.sh /etc/irods/setup_responses
     fi
     # set up iRODS
 
+fi
+if [ -z ${ICAT_PLUGIN+x} ]; then
+    for line in ${arr[@]}; do
+        echo "${line}"
+    done | /var/lib/irods/packaging/setup_irods.sh
 fi
 sed 's@\("irods_host"\)@"irods_authentication_scheme": "PAM",\
     "irods_ssl_ca_certificate_file": "/etc/irods/chain.pem",\
