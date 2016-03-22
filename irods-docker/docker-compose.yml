@@ -14,6 +14,7 @@ services:
     environment:
       - POSTGRES_SERVER=db
       - ICAT_PLUGIN=1.8
+      - EXPORT=/export
     build:
       context: ./icat
       args:
@@ -59,17 +60,17 @@ services:
 
   resource1:
     environment:
-      - POSTGRES_SERVER=db
+      - EXPORT=/expat
     build:
       context: ./icat
     links:
-      - db:db
-    container_name: resc1
+      - icat:icat
+    container_name: iresc1
     devices:
       - /dev/urandom:/dev/random
     volumes:
       - /home/ubuntu/expat:/expat
+    volumes_from:
+      - icat:ro
     hostname: iresc1
-    ports:
-      - 0.0.0.0:1247:1247
     restart: always

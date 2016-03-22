@@ -9,21 +9,21 @@ do
     sleep 5
 done;
 
-if [ -d /export ]; then
-    if [ ! -s /export/.export ]; then
-        cp /.export /export/.export
+if [ -d ${EXPORT} ]; then
+    if [ ! -s ${EXPORT}/.export ]; then
+        cp /.export ${EXPORT}/.export
     fi
     while read f; do
 
         if [ ! -d ${f} ]; then
-            mkdir -p /export${f}
+            mkdir -p ${EXPORT}${f}
         else
-            rsync --ignore-existing -prRALE ${f} /export
+            rsync --ignore-existing -prRALE ${f} ${EXPORT}
             rm -rf ${f}
         fi
-        chown -R 999:999 /export${f}
-        ln -s /export${f} ${f}
-    done </export/.export
+        chown -R 999:999 ${EXPORT}${f}
+        ln -s ${EXPORT}${f} ${f}
+    done <${EXPORT}/.export
 fi
 
 # Grab postgres env: should pass properly in docker compose
@@ -72,8 +72,8 @@ if [ ! -z ${ICAT_PLUGIN+x} ]; then
 fi
 # Create the previous variables for IRODS_SERVICE_ACCOUNT_NAME
 if [ -e /etc/irods/service_account.config ]; then
-    source /etc/irods/service_account.config
-    head -n 2 /etc/irods/setup_responses | /var/lib/irods/packaging/setup_irods_service_account.sh
+    source ${EXPORT}/etc/irods/service_account.config
+    head -n 2 /export/etc/irods/setup_responses | /var/lib/irods/packaging/setup_irods_service_account.sh
     sudo su - ${IRODS_SERVICE_ACCOUNT_NAME} -c "touch /var/lib/${IRODS_SERVICE_ACCOUNT_NAME}/packaging/binary_installation.flag"
     sudo su - ${IRODS_SERVICE_ACCOUNT_NAME} -c "mkdir -p /tmp/${IRODS_SERVICE_ACCOUNT_NAME}/"
     sudo su - ${IRODS_SERVICE_ACCOUNT_NAME} -c "touch /tmp/${IRODS_SERVICE_ACCOUNT_NAME}/setup_irods_database.flag"
@@ -104,6 +104,7 @@ else
 
 fi
 if [ -z ${ICAT_PLUGIN+x} ]; then
+    sleep 5
     for line in ${arr[@]}; do
         echo "${line}"
     done | /var/lib/irods/packaging/setup_irods.sh
